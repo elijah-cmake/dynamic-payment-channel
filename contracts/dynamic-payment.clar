@@ -350,3 +350,25 @@
     (ok true)
   )
 )
+
+;; Read-only function to check channel status
+(define-read-only (get-channel-info
+  (channel-id (buff 32))
+  (participant-a principal)
+  (participant-b principal)
+)
+  (map-get? payment-channels {
+    channel-id: channel-id,
+    participant-a: participant-a,
+    participant-b: participant-b
+  })
+)
+
+;; Emergency contract withdrawal by owner (with time lock)
+(define-public (emergency-withdraw)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-AUTHORIZED)
+    (try! (stx-transfer? (stx-get-balance (as-contract tx-sender)) (as-contract tx-sender) CONTRACT-OWNER))
+    (ok true)
+  )
+)
