@@ -14,3 +14,23 @@
 (define-constant ERR-CHANNEL-CLOSED (err u105))
 (define-constant ERR-DISPUTE-PERIOD (err u106))
 (define-constant ERR-INVALID-INPUT (err u107))
+
+;; Input validation functions
+(define-private (is-valid-channel-id (channel-id (buff 32)))
+  (and
+    (> (len channel-id) u0)
+    (<= (len channel-id) u32)
+  )
+)
+
+(define-private (is-valid-deposit (amount uint))
+  (> amount u0)
+)
+
+(define-private (is-valid-signature (signature (buff 65)))
+  (and
+    (is-eq (len signature) u65)
+    ;; Add additional signature validation if needed
+    true
+  )
+)
